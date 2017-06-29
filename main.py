@@ -12,8 +12,8 @@ MESSAGE = b'001100AAEE'
 
 CARRIDGE_RETURN = b'\r'
 TEST_COMMAND = b'AT'+ CARRIDGE_RETURN
-CHECK_MICROCHANNEL = b'AT$GI?' + CARRIDGE_RETURN
-CONFIGURE_MICROCHANNEL = b'AT$RC' + CARRIDGE_RETURN
+CHECK_MACROCHANNEL = b'AT$GI?\r' + CARRIDGE_RETURN
+CONFIGURE_MACROCHANNEL = b'AT$RC' + CARRIDGE_RETURN
 DEVICE_ID = b'AT$I=10' + CARRIDGE_RETURN
 SEND_MESSAGE = b'AT$SF='
 
@@ -29,9 +29,10 @@ comms = serial.Serial(COM_PORT,BAUD,timeout=5)
 def readSerialResult():
     time.sleep(1)
     response_length = comms.in_waiting
-    print("The response is " + str(response_length) + " bytes")
+
     response = comms.read(response_length)
     print("--Response--")
+    print("The response is " + str(response_length) + " bytes")
     print(response)
     print("---")
 
@@ -52,12 +53,12 @@ readSerialResult()
 
 print()
 print("Check if AT$RC Needs to be Called --- NOTE: We call this anyway but good practise it to check")
-comms.write(CHECK_MICROCHANNEL)
+comms.write(CHECK_MACROCHANNEL)
 readSerialResult()
 
 print()
 print("Call the AT$RC AT Command")
-comms.write(CONFIGURE_MICROCHANNEL)
+comms.write(CONFIGURE_MACROCHANNEL)
 readSerialResult()
 
 #send message and wait 5 seconds for message to be sent before reading result
